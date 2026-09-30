@@ -22,7 +22,16 @@ public final class ProgressionNetwork {
     }
     public static void request(boolean open){CHANNEL.sendToServer(new RequestStats(open));}
     public static void upgrade(String stat){CHANNEL.sendToServer(new UpgradeStat(stat));}
-    public static void sync(ServerPlayer player,boolean open){PlayerProgress p=PlayerProgress.of(player);long next=ProgressionService.thresholdForNext(p.fame());CHANNEL.send(PacketDistributor.PLAYER.with(()->player),new StatsData(player.getGameProfile().getName(),p.grade(),p.fame(),next,next<0?"MAX GRADE":PlayerProgress.gradeFor(next),p.points(),p.prestige(),p.state(),p.technique(),p.tier(),p.stat("dmg"),p.stat("health"),p.stat("ce"),p.stat("speed"),p.stat("durability"),p.totalStats(),dev.jjcprogression.config.ProgressionConfig.STAT_CAP.get(),dev.jjcprogression.config.ProgressionConfig.TOTAL_CAP.get(),open));}
+    public static void sync(ServerPlayer player,boolean open){
+        PlayerProgress p=PlayerProgress.of(player);
+        // JJC is authoritative for the active technique. The saved progression name can be stale
+        // when a technique was selected by JJC before our first login hook ran.
+        dev.jjcprogression.ct.CursedTechniques.current(player).ifPresent(active->{
+            if(!active.name().equals(p.technique())||!active.tier().name().equals(p.tier())){
+                p.technique(active.name());p.tier(active.tier().name());p.firstRollComplete(true);p.save(player);
+            }
+        });
+        long next=ProgressionService.thresholdForNext(p.fame());CHANNEL.send(PacketDistributor.PLAYER.with(()->player),new StatsData(player.getGameProfile().getName(),p.grade(),p.fame(),next,next<0?"MAX GRADE":PlayerProgress.gradeFor(next),p.points(),p.prestige(),p.state(),p.technique(),p.tier(),p.stat("dmg"),p.stat("health"),p.stat("ce"),p.stat("speed"),p.stat("durability"),p.totalStats(),dev.jjcprogression.config.ProgressionConfig.STAT_CAP.get(),dev.jjcprogression.config.ProgressionConfig.TOTAL_CAP.get(),open));}
     private record RequestStats(boolean open){}
     private record UpgradeStat(String stat){}
     public record StatsData(String name,String grade,long fame,long next,String nextGrade,int points,int prestige,String state,String technique,String tier,int dmg,int health,int ce,int speed,int durability,int invested,int statCap,int totalCap,boolean open){

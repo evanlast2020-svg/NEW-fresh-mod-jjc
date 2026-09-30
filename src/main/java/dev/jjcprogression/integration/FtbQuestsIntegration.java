@@ -22,7 +22,7 @@ public final class FtbQuestsIntegration {
             if(!method.getName().equals("act")||args==null||args.length==0)return null;
             Object payload=args[0];@SuppressWarnings("unchecked") List<ServerPlayer> players=(List<ServerPlayer>)payload.getClass().getMethod("getOnlineMembers").invoke(payload);
             int fame=ProgressionConfig.FTB_QUEST_FAME.get(),points=ProgressionConfig.FTB_QUEST_POINTS.get();
-            for(ServerPlayer player:players){if(fame>0)ProgressionService.addFame(player,fame);if(points>0){PlayerProgress p=PlayerProgress.of(player);p.points((int)Math.min(Integer.MAX_VALUE,(long)p.regularPoints()+points));p.save(player);dev.jjcprogression.network.ProgressionNetwork.sync(player,false);}}
+            for(ServerPlayer player:players){String oldGrade=PlayerProgress.of(player).grade();if(fame>0)ProgressionService.addFame(player,fame,false);if(points>0){PlayerProgress p=PlayerProgress.of(player);p.points((int)Math.min(Integer.MAX_VALUE,(long)p.regularPoints()+points));p.save(player);dev.jjcprogression.network.ProgressionNetwork.sync(player,false);}if(fame>0||points>0){String newGrade=PlayerProgress.of(player).grade();player.sendSystemMessage(net.minecraft.network.chat.Component.literal("Quest reward: +"+fame+" Fame, +"+points+" Stat Points"+(oldGrade.equals(newGrade)?"":" • Grade: "+newGrade)));}}
             return Class.forName("dev.architectury.event.EventResult").getMethod("pass").invoke(null);
         });questEvent.getClass().getMethod("register",actor).invoke(questEvent,listener);
         JJCProgression.LOGGER.info("[JJCPROGRESSION] FTB Quests completion rewards enabled through its Architectury event.");

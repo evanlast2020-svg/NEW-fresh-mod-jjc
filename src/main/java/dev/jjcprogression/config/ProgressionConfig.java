@@ -21,8 +21,9 @@ public final class ProgressionConfig {
     public static final ForgeConfigSpec.DoubleValue SPEED_MAX = B.defineInRange("stats.speedMultiplierMaximum", 0.15, 0.0, 2.0);
     public static final ForgeConfigSpec.IntValue DURABILITY_PER_POINT_BPS = B.defineInRange("stats.damageReductionBasisPointsPerPoint", 30, 0, 1000);
     public static final ForgeConfigSpec.IntValue DURABILITY_MAX_BPS = B.defineInRange("stats.damageReductionMaximumBasisPoints", 3000, 0, 9000);
-    public static final ForgeConfigSpec.DoubleValue CE_PER_POINT = B.defineInRange("stats.cursedEnergyCapacityPerPoint", 0.20, 0.0, 10.0);
-    public static final ForgeConfigSpec.DoubleValue CE_MAX_BONUS = B.defineInRange("stats.cursedEnergyCapacityMaximumBonus", 20.0, 0.0, 200.0);
+    public static final ForgeConfigSpec.DoubleValue CE_BASE_CAPACITY = B.defineInRange("stats.cursedEnergyBaseCapacity", 500.0, 1.0, 100000.0);
+    public static final ForgeConfigSpec.DoubleValue CE_PER_POINT = B.defineInRange("stats.cursedEnergyCapacityPerPoint", 5.0, 0.0, 1000.0);
+    public static final ForgeConfigSpec.DoubleValue CE_MAX_BONUS = B.defineInRange("stats.cursedEnergyCapacityMaximumBonus", 100.0, 0.0, 100000.0);
     public static final ForgeConfigSpec.IntValue UNIQUE_KILL_REWARD = B.defineInRange("rewards.uniqueCurseKillPoints", 1, 0, 100000);
     public static final ForgeConfigSpec.IntValue UNIQUE_KILL_FAME = B.defineInRange("rewards.uniqueCurseKillFame", 100, 0, 1000000);
     public static final ForgeConfigSpec.IntValue GRADE4_REWARD = B.defineInRange("rewards.grade4Points", 10, 0, 100000);
@@ -38,7 +39,10 @@ public final class ProgressionConfig {
     public static final ForgeConfigSpec.IntValue PRESTIGE_FAME = B.defineInRange("prestige.requiredFame", 250000, 0, Integer.MAX_VALUE);
     public static final ForgeConfigSpec.IntValue MAX_PRESTIGE = B.defineInRange("prestige.maximum", 10, 0, 100);
     public static final ForgeConfigSpec.IntValue PRESTIGE_REWARD_POINTS = B.defineInRange("prestige.rewardPoints", 5, 0, 100000);
-    public static final ForgeConfigSpec.BooleanValue CT_HUD_ENABLED=B.define("gui.ctHudEnabled",true);
+    // Leave the extra overlay off by default: JJC and common minimap/status mods already occupy
+    // the corners. Players may opt into this addon overlay in the common config.
+    public static final ForgeConfigSpec.BooleanValue CT_HUD_ENABLED=B.define("gui.ctHudEnabled",false);
+    public static final ForgeConfigSpec.BooleanValue QUIET_ADVANCEMENT_CHAT=B.define("chat.suppressAdvancementAnnouncements",true);
     public static final ForgeConfigSpec.IntValue CT_HUD_OFFSET_X=B.defineInRange("gui.ctHudOffsetX",16,0,1000), CT_HUD_OFFSET_Y=B.defineInRange("gui.ctHudOffsetY",24,0,1000), CT_HUD_SCALE=B.defineInRange("gui.ctHudScalePercent",100,50,200);
     public static final ForgeConfigSpec.IntValue CT_HUD_TEXT_COLOR=B.defineInRange("gui.ctHudTextColor",0xFFFFFFFF,Integer.MIN_VALUE,Integer.MAX_VALUE), CT_HUD_ACCENT_COLOR=B.defineInRange("gui.ctHudAccentColor",0xFFE5A4EF,Integer.MIN_VALUE,Integer.MAX_VALUE), CT_HUD_BACKGROUND_COLOR=B.defineInRange("gui.ctHudBackgroundColor",0xA0181118,Integer.MIN_VALUE,Integer.MAX_VALUE);
     public static final ForgeConfigSpec.IntValue FTB_QUEST_FAME=B.defineInRange("ftbQuests.famePerCompletedQuest",100,0,1000000), FTB_QUEST_POINTS=B.defineInRange("ftbQuests.pointsPerCompletedQuest",1,0,100000);
