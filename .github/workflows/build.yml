@@ -20,10 +20,11 @@ jobs:
           distribution: temurin
           java-version: '17'
       - name: Build Forge mod
-        run: ./gradlew --no-daemon build
+        run: bash ./gradlew --no-daemon build
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
           name: jjcprogression-jar
           path: build/libs/*.jar
           if-no-files-found: error
+
